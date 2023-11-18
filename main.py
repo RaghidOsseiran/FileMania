@@ -4,6 +4,7 @@ import random
 import time
 from game import *
 from player import *
+from monsters import *
 
 
 
@@ -16,6 +17,9 @@ game = Game(screen)
 player = pg.sprite.GroupSingle()
 player.add(Player())
 
+monsters = pg.sprite.Group()
+monsters.add(Monsters("sheep"))
+
 
 
 
@@ -25,9 +29,12 @@ while True:
             pg.quit()
             sys.exit()
     screen.fill('black')
-    screen.blit(game.current_bg, (0,0))
+    screen.blit(game.current_bg_ac, (0,0))
     player.draw(screen)
     player.update()
+
+    monsters.draw(screen)
+    monsters.update()    
 
     pg.display.update()
     clock.tick(60)

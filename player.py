@@ -5,7 +5,7 @@ class Player(pg.sprite.Sprite):
         super().__init__()
         self.sheet = pg.image.load("images/player/playerSprites.png").convert_alpha()
         self.image = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
-        self.rect = self.image.get_rect(midbottom = (233,425))
+        self.rect = self.image.get_rect(midbottom = (233,438))
 
         player_stand_1_right = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
         player_stand_2_right = self.sheet.subsurface(pg.Rect(17+64, 207, 30, 47))
@@ -33,20 +33,20 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_q] and self.rect.left >= 0:
             self.rect.left -= 3
             self.moveRight = False
-        if keys[pg.K_SPACE] and self.rect.bottom >= 425:
+        if keys[pg.K_SPACE] and self.rect.bottom >= 438:
             self.gravity = -10
 
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
-        if self.rect.bottom >= 425:
-            self.rect.bottom = 425
+        if self.rect.bottom >= 438:
+            self.rect.bottom = 438
 
 
 # jump 5*x et 4*y
 
     def animation_state_right(self):
-        if self.rect.bottom < 425:
+        if self.rect.bottom < 438:
             if(self.moveRight):
                 self.image = self.player_jump_tab[0]
             else:
