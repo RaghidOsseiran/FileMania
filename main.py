@@ -5,6 +5,7 @@ import time
 from game import *
 from player import *
 from monsters import *
+from items import *
 
 
 
@@ -18,8 +19,34 @@ player = pg.sprite.GroupSingle()
 player.add(Player())
 
 monsters = pg.sprite.Group()
-monsters.add(Monsters("sheep"))
 
+sheep_npc = Monsters("sheep")
+
+monsters.add(sheep_npc)
+
+items = pg.sprite.Group()
+
+
+
+
+def collision_sprite():
+    collided_monsters = pg.sprite.spritecollide(player.sprite, monsters, True)
+    if collided_monsters:
+        for monster in collided_monsters:
+            if (monster.hasObject):
+                monster.lastPosX = monster.rect.x
+                monster.lastPosY = monster.rect.y
+                monster.hasObject = False
+                spawnItem(monster)
+
+def spawnItem(monster):
+    monster.Item = ChestPiece(monster.lastPosX, monster.lastPosY)
+    items.add(monster.Item)
+    
+
+
+    # else:
+    #     print("no collision")
 
 
 
@@ -34,7 +61,14 @@ while True:
     player.update()
 
     monsters.draw(screen)
-    monsters.update()    
+    monsters.update()
+
+    collision_sprite()
+
+
+    items.draw(screen)
+    items.update()
+
 
     pg.display.update()
     clock.tick(60)

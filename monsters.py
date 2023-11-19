@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+from items import *
 
 
 class Monsters(pg.sprite.Sprite):
@@ -11,6 +12,9 @@ class Monsters(pg.sprite.Sprite):
             self.rect = self.image.get_rect(midbottom = (585,438))
             self.hasObject = True
             self.moveRight = True
+            self.lastPosX = 0
+            self.lastPosY = 0
+            self.Item = 0
 
             self.right_movement = []
             self.left_movement = []
@@ -39,6 +43,8 @@ class Monsters(pg.sprite.Sprite):
         else:
             self.rect.left -= 1
             self.image = self.left_movement[int(self.movIndx)]
+
+
 
 
 
