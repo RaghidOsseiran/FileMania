@@ -35,6 +35,7 @@ class Player(pg.sprite.Sprite):
             self.moveRight = False
         if keys[pg.K_SPACE] and self.rect.bottom >= 438:
             self.gravity = -10
+        
 
     def apply_gravity(self):
         self.gravity += 1
