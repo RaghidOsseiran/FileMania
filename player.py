@@ -7,6 +7,24 @@ class Player(pg.sprite.Sprite):
         self.image = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
         self.rect = self.image.get_rect(midbottom = (233,438))
 
+        self.helmet = False
+        self.chestPiece = False
+        self.leggins = False
+        self.boots = False
+
+        self.player_standIndex = 0
+        self.player_stand_right = []
+        self.player_stand_left = []
+        self.player_jump_tab = []
+
+
+        self.gravity = 0
+
+
+        self.moveRight = True
+    
+
+    def update_animate(self):
         player_stand_1_right = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
         player_stand_2_right = self.sheet.subsurface(pg.Rect(17+64, 207, 30, 47))
 
@@ -15,16 +33,13 @@ class Player(pg.sprite.Sprite):
 
         self.player_stand_right = [player_stand_1_right,player_stand_2_right]
         self.player_stand_left = [player_stand_1_left,player_stand_2_left]
-        self.player_standIndex = 0
 
-        self.gravity = 0
 
         player_jump_right = self.sheet.subsurface(pg.Rect(17+(64*4), 207, 30, 47))
         player_jump_left = self.sheet.subsurface(pg.Rect(17+(64*5), 207-(64*2), 30, 47))
         self.player_jump_tab = [player_jump_right, player_jump_left]
 
-        self.moveRight = True
-    
+
     def player_input(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_d] and self.rect.right <= 805:
@@ -62,10 +77,15 @@ class Player(pg.sprite.Sprite):
 
         # else:
 
+    
+    def updated_sheet():
+        self.image
+
 
     def update(self):
         self.player_input()
         self.apply_gravity()
         self.animation_state_right()
+        self.update_animate()
 
 

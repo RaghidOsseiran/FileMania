@@ -13,4 +13,4 @@ class ChestPiece(Items):
         self.sheet = pg.image.load("images/items/Chest2.png").convert_alpha()
         self.image = self.sheet.subsurface(pg.Rect(17,33, 30, 14))
         self.rect = self.image.get_rect(midbottom = (posX, posY+48))
-        self.pickedUp = False
+        self.type = "chestPiece"

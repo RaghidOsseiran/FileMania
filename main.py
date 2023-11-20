@@ -18,7 +18,8 @@ game = Game(screen)
 
 #Player group and instance
 player = pg.sprite.GroupSingle()
-player.add(Player())
+player_instance = Player()
+player.add(player_instance)
 
 #Monster group and instance
 monsters = pg.sprite.Group()
@@ -65,9 +66,12 @@ def spawnItem(monster):
     items.add(monster.Item)
     
 
+def hasArmor(player, type):
+    if type == "chestPiece":
+        if (player_instance.chestPiece == False):
+            print("changed the sheet")
+            player_instance.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha()
 
-    # else:
-    #     print("no collision")
 
 
 
@@ -94,7 +98,7 @@ while True:
     keys = pg.key.get_pressed()
     if keys[pg.K_e]:
         for item in collided_items:
-            print("pressing E")
+            hasArmor(player_instance, item.type)
             items.remove(item)
 
 
