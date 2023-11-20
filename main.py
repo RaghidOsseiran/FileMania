@@ -23,7 +23,7 @@ player.add(player_instance)
 
 #Monster group and instance
 monsters = pg.sprite.Group()
-sheep_npc = Monsters("sheep")
+sheep_npc = Sheep(585, 438)
 monsters.add(sheep_npc)
 
 #Items group
@@ -101,6 +101,7 @@ while True:
             hasArmor(player_instance, item.type)
             items.remove(item)
 
+    # 35
 
     pg.display.update()
     clock.tick(60)

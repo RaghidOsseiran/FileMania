@@ -4,34 +4,35 @@ from items import *
 
 
 class Monsters(pg.sprite.Sprite):
-    def __init__(self, type):
+    def __init__(self, img_path, start_x, start_y):
         super().__init__()
-        if type == "sheep":
-            self.sheet = pg.image.load("images/Sheep/Sheep.png").convert_alpha()
-            self.image = self.sheet.subsurface(pg.Rect(17, 207 + (64*8), 30, 47))
-            self.rect = self.image.get_rect(midbottom = (585,438))
-            self.hasObject = True
-            self.moveRight = True
-            self.lastPosX = 0
-            self.lastPosY = 0
-            self.Item = 0
+        self.sheet = pg.image.load(img_path).convert_alpha()
+        self.image = self.sheet.subsurface(pg.Rect(17, 207 + (64*8), 30, 47))
+        self.rect = self.image.get_rect(midbottom = (start_x,start_y))
 
-            self.right_movement = []
-            self.left_movement = []
+class Sheep(Monsters):
+    def __init__(self, start_x, start_y):
+        super().__init__("images/Sheep/Sheep.png", start_x, start_y)
+        self.hasObject = True
+        self.moveRight = True
+        self.lastPosX = 0
+        self.lastPosY = 0
+        self.Item = 0
 
-            for i in range(8):
-                self.right_movement.append(self.sheet.subsurface(pg.Rect(17+ (64*i), 207+(64*8), 30, 47)))
-                self.left_movement.append(self.sheet.subsurface(pg.Rect(17+ (64*i), 207+(64*6), 30, 47)))
-            self.movIndx = 0
+        self.right_movement = []
+        self.left_movement = []
 
-            self.intial_pos = (585,425)
+        for i in range(8):
+            self.right_movement.append(self.sheet.subsurface(pg.Rect(17+ (64*i), 207+(64*8), 30, 47)))
+            self.left_movement.append(self.sheet.subsurface(pg.Rect(17+ (64*i), 207+(64*6), 30, 47)))
+        self.movIndx = 0
+
 
     def collide_invis_border(self):
         if (self.rect.right == 755):
             self.moveRight = False  
         if (self.rect.left == 515):
             self.moveRight = True
-
 
     def movement(self):
         self.movIndx += 0.030
@@ -43,9 +44,6 @@ class Monsters(pg.sprite.Sprite):
         else:
             self.rect.left -= 1
             self.image = self.left_movement[int(self.movIndx)]
-
-
-
 
 
     def update(self):
