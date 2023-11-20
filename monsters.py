@@ -4,20 +4,23 @@ from items import *
 
 
 class Monsters(pg.sprite.Sprite):
-    def __init__(self, img_path, start_x, start_y):
+    def __init__(self, img_path, start_x, start_y, initial_stance, rect_surface):
         super().__init__()
         self.sheet = pg.image.load(img_path).convert_alpha()
-        self.image = self.sheet.subsurface(pg.Rect(17, 207 + (64*8), 30, 47))
-        self.rect = self.image.get_rect(midbottom = (start_x,start_y))
+        self.image = self.sheet.subsurface(initial_stance)
+        self.rect = self.image.get_rect(midbottom = rect_surface)
+        self.initial_pos = (start_x, start_y)
+        self.hasObject = False
+        self.Item = 0
 
 class Sheep(Monsters):
     def __init__(self, start_x, start_y):
-        super().__init__("images/Sheep/Sheep.png", start_x, start_y)
+        super().__init__("images/Npcs/Sheep/Sheep.png", start_x, start_y, pg.Rect(17, 207 + (64*8), 30, 47), (start_x,start_y))
         self.hasObject = True
         self.moveRight = True
         self.lastPosX = 0
         self.lastPosY = 0
-        self.Item = 0
+
 
         self.right_movement = []
         self.left_movement = []
@@ -29,9 +32,9 @@ class Sheep(Monsters):
 
 
     def collide_invis_border(self):
-        if (self.rect.right == 755):
+        if (self.rect.right == self.initial_pos[0]+170):
             self.moveRight = False  
-        if (self.rect.left == 515):
+        if (self.rect.left == self.initial_pos[1]+77):
             self.moveRight = True
 
     def movement(self):
@@ -52,4 +55,7 @@ class Sheep(Monsters):
         self.movement()
 
 
-# from current pos x 8, 6 with y
+class SpawnKeeper(Monsters):
+    def __init__(self, start_x, start_y):
+        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(337, 1307, 41, 37), (start_x, start_y+10))
+

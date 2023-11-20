@@ -24,7 +24,8 @@ player.add(player_instance)
 #Monster group and instance
 monsters = pg.sprite.Group()
 sheep_npc = Sheep(585, 438)
-monsters.add(sheep_npc)
+SpawnKeeper_npc = SpawnKeeper(35,438)
+monsters.add(sheep_npc, SpawnKeeper_npc)
 
 #Items group
 items = pg.sprite.Group()
@@ -70,7 +71,10 @@ def hasArmor(player, type):
     if type == "chestPiece":
         if (player_instance.chestPiece == False):
             print("changed the sheet")
+            player_instance.chestPiece = True
             player_instance.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha()
+            return True
+        return False
 
 
 
@@ -98,8 +102,8 @@ while True:
     keys = pg.key.get_pressed()
     if keys[pg.K_e]:
         for item in collided_items:
-            hasArmor(player_instance, item.type)
-            items.remove(item)
+            if (hasArmor(player_instance, item.type)):
+                items.remove(item)
 
     # 35
 
