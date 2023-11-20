@@ -77,9 +77,6 @@ class Player(pg.sprite.Sprite):
 
         # else:
 
-    
-    def updated_sheet():
-        self.image
 
 
     def update(self):
