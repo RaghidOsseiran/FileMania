@@ -68,7 +68,3 @@ class Player(pg.sprite.Sprite):
         self.animation_state_right()
 
 
-
-
-
-# ecart entre 2 sprite 64 pixels suivant x et 64 pixels suivant Y
