@@ -24,8 +24,14 @@ player.add(player_instance)
 #Monster group and instance
 monsters = pg.sprite.Group()
 sheep_npc = Sheep(585, 438)
+monsters.add(sheep_npc)
+
+
+npcs = pg.sprite.Group()
 SpawnKeeper_npc = SpawnKeeper(35,438)
-monsters.add(sheep_npc, SpawnKeeper_npc)
+npcs.add(SpawnKeeper_npc)
+
+
 
 #Items group
 items = pg.sprite.Group()
@@ -34,15 +40,30 @@ items_font = pg.font.Font("images/font/Pixeltype.ttf", 20)
 
 
 
-def collision_sprite():
+def collision_sprite_monsters():
     collided_monsters = pg.sprite.spritecollide(player.sprite, monsters, True)
     if collided_monsters:
         for monster in collided_monsters:
-            if (monster.hasObject):
+            if (monster.hasObject and monster.type == "sheep"):
+                print("sheep if")
                 monster.lastPosX = monster.rect.x
                 monster.lastPosY = monster.rect.y
                 monster.hasObject = False
                 spawnItem(monster)
+
+
+def collision_sprite_npcs():
+    collided_npcs = pg.sprite.spritecollide(player.sprite, npcs, False)
+    if collided_npcs:
+        for npc in collided_npcs:
+            if (npc.hasObject and npc.type == "spawnkeeper"):
+                npc.canInteract = True
+                spawnkeeperInteract(npc)
+
+
+def spawnkeeperInteract(monsterself):
+    print("updating")
+    monsterself.update()
 
 
 def draw_text(text, color, surface, x, y):
@@ -87,13 +108,17 @@ while True:
         
     screen.fill('black')
     screen.blit(game.current_bg_ac, (0,0))
+
     player.draw(screen)
     player.update()
+
+    npcs.draw(screen)
+    collision_sprite_npcs()
 
     monsters.draw(screen)
     monsters.update()
 
-    collision_sprite()
+    collision_sprite_monsters()
 
     items.draw(screen)
     items.update()
@@ -104,6 +129,7 @@ while True:
         for item in collided_items:
             if (hasArmor(player_instance, item.type)):
                 items.remove(item)
+
 
     # 35
 

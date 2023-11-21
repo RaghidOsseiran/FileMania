@@ -12,6 +12,7 @@ class Monsters(pg.sprite.Sprite):
         self.initial_pos = (start_x, start_y)
         self.hasObject = False
         self.Item = 0
+        self.type = ""
 
 class Sheep(Monsters):
     def __init__(self, start_x, start_y):
@@ -20,6 +21,7 @@ class Sheep(Monsters):
         self.moveRight = True
         self.lastPosX = 0
         self.lastPosY = 0
+        self.type = "sheep"
 
 
         self.right_movement = []
@@ -57,5 +59,28 @@ class Sheep(Monsters):
 
 class SpawnKeeper(Monsters):
     def __init__(self, start_x, start_y):
-        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(337, 1307, 41, 37), (start_x, start_y+10))
+        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(337, 1307, 41, 37), (start_x, start_y))
+        # in the super.init it enharits the self.sheet, self.image, self.rect.
+        self.hasObject = True 
+        self.type = "spawnkeeper"
+        self.canInteract = False
+        self.frame_interact = 0
+    
+    def interaction_array(self):
+        wake_up = []
+        for i in range (1,5):
+            wake_up.append(self.sheet.subsurface(pg.Rect(337-(65*i), 1295, 41, 47)))
+        wake_up.append(self.sheet.subsurface(pg.Rect(21, 713, 36, 53)))
+        return wake_up
+    
+    def interaction_init(self):
+        wake_up = self.interaction_array()
+        if self.frame_interact < len(wake_up)-1:
+            self.frame_interact += 0.1
+            self.image = wake_up[int(self.frame_interact)]
+    
+    def update(self):
+        self.interaction_init()
+
+
 
