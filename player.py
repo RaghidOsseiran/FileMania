@@ -1,11 +1,14 @@
 import pygame as pg
 
 class Player(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, gameself):
         super().__init__()
         self.sheet = pg.image.load("images/player/playerSprites.png").convert_alpha()
         self.image = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
         self.rect = self.image.get_rect(midbottom = (233,438))
+
+
+        self.player_group = pg.sprite.GroupSingle(self)
 
         self.helmet = False
         self.chestPiece = False
@@ -45,7 +48,7 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_d] and self.rect.right <= 805:
             self.rect.right += 3
             self.moveRight = True
-        if keys[pg.K_q] and self.rect.left >= 0:
+        if keys[pg.K_q] or keys[pg.K_a] and self.rect.left >= 0:
             self.rect.left -= 3
             self.moveRight = False
         if keys[pg.K_SPACE] and self.rect.bottom >= 438:

@@ -4,7 +4,7 @@ from items import *
 
 
 class Monsters(pg.sprite.Sprite):
-    def __init__(self, img_path, start_x, start_y, initial_stance, rect_surface):
+    def __init__(self, img_path, start_x, start_y, initial_stance, rect_surface, namegroup):
         super().__init__()
         self.sheet = pg.image.load(img_path).convert_alpha()
         self.image = self.sheet.subsurface(initial_stance)
@@ -13,10 +13,13 @@ class Monsters(pg.sprite.Sprite):
         self.hasObject = False
         self.Item = 0
         self.type = ""
+        namegroup.add(self)
+
 
 class Sheep(Monsters):
-    def __init__(self, start_x, start_y):
-        super().__init__("images/Npcs/Sheep/Sheep.png", start_x, start_y, pg.Rect(17, 207 + (64*8), 30, 47), (start_x,start_y))
+    def __init__(self, start_x, start_y, gameself):
+        self.game = gameself
+        super().__init__("images/Npcs/Sheep/Sheep.png", start_x, start_y, pg.Rect(17, 207 + (64*8), 30, 47), (start_x,start_y), self.game.monster_group)
         self.hasObject = True
         self.moveRight = True
         self.lastPosX = 0

@@ -10,34 +10,7 @@ from items import *
 
 
 
-pg.init()
-screen = pg.display.set_mode((800,457))
-pg.display.set_caption("FileMania")
-clock = pg.time.Clock()
-game = Game(screen)
-
-
-#Player group and instance
-player = pg.sprite.GroupSingle()
-player_instance = Player()
-player.add(player_instance)
-
-#Monster group and instance
-monsters = pg.sprite.Group()
-sheep_npc = Sheep(585, 438)
-monsters.add(sheep_npc)
-
-
-npcs = pg.sprite.Group()
-SpawnKeeper_npc = SpawnKeeper(35,438)
-npcs.add(SpawnKeeper_npc)
-
-
-
-#Items group
-items = pg.sprite.Group()
-
-items_font = pg.font.Font("images/font/Pixeltype.ttf", 20)
+Game()
 
 
 
@@ -125,44 +98,5 @@ def hasArmorChestpiece(player, type):
 
 
 
-
-while True:
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            sys.exit()
-        
-    screen.fill('black')
-    screen.blit(game.current_bg_ac, (0,0))
-
-    player.draw(screen)
-    player.update()
-
-    npcs.draw(screen)
-    collision_sprite_npcs()
-    npcs.update()
-
-
-    monsters.draw(screen)
-    monsters.update()
-
-    collision_sprite_monsters()
-
-    items.draw(screen)
-    items.update()
-
-    collided_items = collision_item()
-
-
-    keys = pg.key.get_pressed()
-    if keys[pg.K_e]:
-        for item in collided_items:
-            if (hasArmorChestpiece(player_instance, item.type)):
-                items.remove(item)
-
-
-
-    pg.display.update()
-    clock.tick(60)
 
 
