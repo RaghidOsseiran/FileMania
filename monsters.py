@@ -67,9 +67,9 @@ class SpawnKeeper(Monsters):
         self.frame_interact = 0
 
         # array for the dialogue
-        self.diaglogue = ["", "", ""]
-        self.diaglogueIndx = 0
-
+        self.dialogue = ["press E to talk", "Hello sir, kill that sheep", "Oh, you dont have a weapon, here take my sword"]
+        self.dialogueIndx = 0
+        self.prv_key_state = False
 
         self.is_waking_up = False
         self.fully_woke = False
@@ -100,9 +100,9 @@ class SpawnKeeper(Monsters):
                 self.fully_woke = True
 
 
-
     
     def update(self):
         if not self.fully_woke:
             self.wake_up()
+        
 
