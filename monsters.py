@@ -59,28 +59,50 @@ class Sheep(Monsters):
 
 class SpawnKeeper(Monsters):
     def __init__(self, start_x, start_y):
-        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(337, 1307, 41, 37), (start_x, start_y))
+        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(338, 1291, 40, 53), (start_x, start_y))
         # in the super.init it enharits the self.sheet, self.image, self.rect.
         self.hasObject = True 
         self.type = "spawnkeeper"
         self.canInteract = False
         self.frame_interact = 0
-    
-    def interaction_array(self):
+
+        # array for the dialogue
+        self.diaglogue = ["", "", ""]
+        self.diaglogueIndx = 0
+
+
+        self.is_waking_up = False
+        self.fully_woke = False
+
+
+
+    # fonction pour gerer l'animation des wake up
+
+    def wake_up_animation(self):
         wake_up = []
         for i in range (1,5):
-            wake_up.append(self.sheet.subsurface(pg.Rect(337-(65*i), 1295, 41, 47)))
+            wake_up.append(self.sheet.subsurface(pg.Rect(338-(65*i), 1291, 40, 53)))
         wake_up.append(self.sheet.subsurface(pg.Rect(21, 713, 36, 53)))
         return wake_up
     
     def interaction_init(self):
-        wake_up = self.interaction_array()
-        if self.frame_interact < len(wake_up)-1:
-            self.frame_interact += 0.1
-            self.image = wake_up[int(self.frame_interact)]
+        self.is_waking_up = True
+
+
+    def wake_up(self):
+        if self.is_waking_up:
+            wake_up = self.wake_up_animation()
+            if self.frame_interact < len(wake_up)-1 and not self.fully_woke:
+                self.frame_interact += 0.2
+                self.image = wake_up[int(self.frame_interact)]
+            else:
+                self.is_waking_up = False
+                self.fully_woke = True
+
+
+
     
     def update(self):
-        self.interaction_init()
-
-
+        if not self.fully_woke:
+            self.wake_up()
 

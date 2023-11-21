@@ -16,6 +16,7 @@ pg.display.set_caption("FileMania")
 clock = pg.time.Clock()
 game = Game(screen)
 
+
 #Player group and instance
 player = pg.sprite.GroupSingle()
 player_instance = Player()
@@ -40,6 +41,18 @@ items_font = pg.font.Font("images/font/Pixeltype.ttf", 20)
 
 
 
+
+def draw_text(text, color, surface, x, y):
+    text_surface = items_font.render(text, False, color)
+    text_rect = text_surface.get_rect(topleft = (x, y-25))
+    surface.blit(text_surface, text_rect)
+
+def get_sprites_in_group(group):
+    return group.sprites()
+
+
+# collsision functions
+
 def collision_sprite_monsters():
     collided_monsters = pg.sprite.spritecollide(player.sprite, monsters, True)
     if collided_monsters:
@@ -52,25 +65,10 @@ def collision_sprite_monsters():
                 spawnItem(monster)
 
 
-def collision_sprite_npcs():
-    collided_npcs = pg.sprite.spritecollide(player.sprite, npcs, False)
-    if collided_npcs:
-        for npc in collided_npcs:
-            if (npc.hasObject and npc.type == "spawnkeeper"):
-                npc.canInteract = True
-                spawnkeeperInteract(npc)
-
-
-def spawnkeeperInteract(monsterself):
-    print("updating")
-    monsterself.update()
-
-
-def draw_text(text, color, surface, x, y):
-    text_surface = items_font.render(text, False, color)
-    text_rect = text_surface.get_rect(topleft = (x, y-25))
-    surface.blit(text_surface, text_rect)
-
+def spawnItem(monster):
+    monster.Item = ChestPiece(monster.lastPosX, monster.lastPosY)
+    items.add(monster.Item)
+                    
 
 
 def collision_item():
@@ -80,18 +78,31 @@ def collision_item():
             collide_message = "Press E to pick up item"
             draw_text(collide_message, "white", screen, item.rect.x, item.rect.y)
     return collided_items
-            
 
 
-def spawnItem(monster):
-    monster.Item = ChestPiece(monster.lastPosX, monster.lastPosY)
-    items.add(monster.Item)
-    
+def collision_sprite_npcs():
+    collided_npcs = pg.sprite.spritecollide(player.sprite, npcs, False)
+    if collided_npcs:
+        for npc in collided_npcs:
+            if (npc.hasObject and npc.type == "spawnkeeper"):
+                # i want to add the option to press E to talk
+                keys = pg.key.get_pressed()
+                if keys[pg.K_e]:
+                    interactions_sprite_npcs(npcs)
 
-def hasArmor(player, type):
+
+def interactions_sprite_npcs(group):
+    group_npcs = get_sprites_in_group(group)
+    for npc in group_npcs:
+        if (npc.type == "spawnkeeper"):
+            if (npc.fully_woke == False):
+                npc.interaction_init()
+
+
+
+def hasArmorChestpiece(player, type):
     if type == "chestPiece":
         if (player_instance.chestPiece == False):
-            print("changed the sheet")
             player_instance.chestPiece = True
             player_instance.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha()
             return True
@@ -114,6 +125,8 @@ while True:
 
     npcs.draw(screen)
     collision_sprite_npcs()
+    SpawnKeeper_npc.update()
+
 
     monsters.draw(screen)
     monsters.update()
@@ -124,14 +137,15 @@ while True:
     items.update()
 
     collided_items = collision_item()
+
+
     keys = pg.key.get_pressed()
     if keys[pg.K_e]:
         for item in collided_items:
-            if (hasArmor(player_instance, item.type)):
+            if (hasArmorChestpiece(player_instance, item.type)):
                 items.remove(item)
 
 
-    # 35
 
     pg.display.update()
     clock.tick(60)
