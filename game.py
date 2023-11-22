@@ -35,7 +35,6 @@ class Game:
 
     #player monsters and npc initialisations
     def init_player(self):
-        print("initialising player")
         self.player = Player(self)
 
     def init_sheep(self):
@@ -73,7 +72,6 @@ class Game:
         if collided_monsters:
             for monster in collided_monsters:
                 if (monster.hasObject and monster.type == "sheep"):
-                    print("sheep if")
                     monster.lastPosX = monster.rect.x
                     monster.lastPosY = monster.rect.y
                     monster.hasObject = False
