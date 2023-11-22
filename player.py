@@ -7,8 +7,7 @@ class Player(pg.sprite.Sprite):
         self.image = self.sheet.subsurface(pg.Rect(17, 207, 30, 47))
         self.rect = self.image.get_rect(midbottom = (233,438))
 
-
-        self.player_group = pg.sprite.GroupSingle(self)
+        self.game = gameself
 
         self.helmet = False
         self.chestPiece = False
@@ -78,7 +77,34 @@ class Player(pg.sprite.Sprite):
                 self.image = self.player_stand_right[int(self.player_standIndex)]
             else: self.image = self.player_stand_left[int(self.player_standIndex)]
 
-        # else:
+
+
+    def collision_item(self):
+        collided_items = pg.sprite.spritecollide(self, self.game.items_group, False)
+        if collided_items:
+            for item in collided_items:
+                collide_message = "Press E to pick up item"
+                self.game.draw_text(collide_message, "white", self.game.screen, item.rect.x, item.rect.y, False)
+        return collided_items
+
+
+    def armor_detection(self):
+        collided_items = self.collision_item()
+        keys = pg.key.get_pressed()
+        if keys[pg.K_e]:
+            for item in collided_items:
+                if (self.hasArmorChestpiece(item.type)):
+                    self.game.items_group.remove(item)
+
+
+    def hasArmorChestpiece(self, type):
+        if type == "chestPiece":
+            if (self.chestPiece == False):
+                self.chestPiece = True
+                self.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha()
+                return True
+            return False
+
 
 
 
@@ -87,5 +113,7 @@ class Player(pg.sprite.Sprite):
         self.apply_gravity()
         self.animation_state_right()
         self.update_animate()
+        self.armor_detection()
+ 
 
 

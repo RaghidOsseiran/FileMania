@@ -11,7 +11,7 @@ class Monsters(pg.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = rect_surface)
         self.initial_pos = (start_x, start_y)
         self.hasObject = False
-        self.Item = 0
+        self.Item_dropped = 0
         self.type = ""
         namegroup.add(self)
 
@@ -19,7 +19,8 @@ class Monsters(pg.sprite.Sprite):
 class Sheep(Monsters):
     def __init__(self, start_x, start_y, gameself):
         self.game = gameself
-        super().__init__("images/Npcs/Sheep/Sheep.png", start_x, start_y, pg.Rect(17, 207 + (64*8), 30, 47), (start_x,start_y), self.game.monster_group)
+        super().__init__("images/Npcs/Sheep/Sheep.png", start_x, start_y, pg.Rect(17, 207 + (64*8), 30, 47), (start_x,start_y), gameself.monster_group)
+        print(f"{self.game.monster_group}")
         self.hasObject = True
         self.moveRight = True
         self.lastPosX = 0
@@ -61,13 +62,14 @@ class Sheep(Monsters):
 
 
 class SpawnKeeper(Monsters):
-    def __init__(self, start_x, start_y):
-        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(338, 1291, 40, 53), (start_x, start_y))
+    def __init__(self, start_x, start_y, gameself):
+        super().__init__("images/Npcs/SpawnKeeper/SpawnKeeper.png",start_x, start_y, pg.Rect(338, 1291, 40, 53), (start_x, start_y), gameself.npcs_group)
         # in the super.init it enharits the self.sheet, self.image, self.rect.
         self.hasObject = True 
         self.type = "spawnkeeper"
         self.canInteract = False
         self.frame_interact = 0
+        self.game = gameself
 
         # array for the dialogue
         self.dialogue = ["press E to talk", "Hello sir, kill that sheep", "Oh, you dont have a weapon, here take my sword"]
@@ -76,6 +78,8 @@ class SpawnKeeper(Monsters):
 
         self.is_waking_up = False
         self.fully_woke = False
+
+        self.game = gameself
 
 
 
@@ -101,6 +105,14 @@ class SpawnKeeper(Monsters):
             else:
                 self.is_waking_up = False
                 self.fully_woke = True
+    
+    def dialogue_control(self, npc, key_state_now, prv_key_state):
+        if prv_key_state and not key_state_now:
+            npc.dialogueIndx += 1
+            if (npc.dialogueIndx > 2 ): # and sheep not killed (a ajouter)
+                npc.dialogueIndx = 2
+                self.game.draw_text("...", 'white', self.game.screen, npc.rect.x, npc.rect.y, True)
+
 
 
     
