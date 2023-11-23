@@ -13,7 +13,7 @@ class Game:
         self.screen = pg.display.set_mode((800,457))
         pg.display.set_caption("FileMania")
         self.clock = pg.time.Clock()
-        self.text_font = pg.font.Font("images/font/Pixeltype.ttf", 20)
+        self.text_font = pg.font.Font("images/font/Pixeltype.ttf", 25)
 
         self.init_player()
         self.player_group = pg.sprite.GroupSingle(self.player)
@@ -35,7 +35,6 @@ class Game:
 
     #player monsters and npc initialisations
     def init_player(self):
-        print("initialising player")
         self.player = Player(self)
 
     def init_sheep(self):
@@ -66,18 +65,24 @@ class Game:
     def spawnItem(self, monster):
         monster.Item_dropped = ChestPiece(monster.lastPosX, monster.lastPosY, self)
         self.items_group.add(monster.Item_dropped)
+        monster.kill()
 
 
     def collision_sprite_monsters(self):
-        collided_monsters = pg.sprite.spritecollide(self.player, self.monster_group, True)
+        current_time = pg.time.get_ticks()
+        collided_monsters = pg.sprite.spritecollide(self.player, self.monster_group, False)
         if collided_monsters:
             for monster in collided_monsters:
-                if (monster.hasObject and monster.type == "sheep"):
-                    print("sheep if")
+                if (monster.hasObject and monster.type == "sheep" and self.player.inventory["attackweapon"]):
                     monster.lastPosX = monster.rect.x
                     monster.lastPosY = monster.rect.y
                     monster.hasObject = False
                     self.spawnItem(monster)
+                else:
+                    print(f"timer between: {current_time - self.player.damage_cooldown}")
+                    if current_time - self.player.damage_cooldown > self.player.damage_cooldown_period:
+                        self.player.hp -= 5
+                        self.player.damage_cooldown = current_time
 
 
 
@@ -93,7 +98,7 @@ class Game:
                     key_pressed_E = keys[pg.K_e]
                     if keys[pg.K_e] and not npc.fully_woke:
                         self.interactions_sprite_npcs()
-                    if npc.fully_woke:
+                    if npc.fully_woke and npc.dialogueIndx <= 4:
                         self.draw_text(npc.dialogue[npc.dialogueIndx], 'white', self.screen, npc.rect.x, npc.rect.y, True)
                         self.spawnKeeper.dialogue_control(npc, key_pressed_E, npc.prv_key_state) 
                     npc.prv_key_state = key_pressed_E

@@ -9,10 +9,8 @@ class Player(pg.sprite.Sprite):
 
         self.game = gameself
 
-        self.helmet = False
-        self.chestPiece = False
-        self.leggins = False
-        self.boots = False
+
+
 
         self.player_standIndex = 0
         self.player_stand_right = []
@@ -20,10 +18,32 @@ class Player(pg.sprite.Sprite):
         self.player_jump_tab = []
 
 
+        self.inventory = {
+            "helmet": False,
+            "chestpiece": False, 
+            "leggings": False,
+            "boots": False,
+            "attackweapon": False
+        }
+
         self.gravity = 0
 
+        self.speed = 3
+        self.hp = 100
 
         self.moveRight = True
+
+        self.baseAD = 0
+        self.baseRes = 0
+        self.baseSpeed = 3
+
+
+        self.attackDamage = 0
+        self.resistances = 0
+        self.range = 0
+
+        self.damage_cooldown = 0
+        self.damage_cooldown_period = 1000
     
 
     def update_animate(self):
@@ -45,10 +65,10 @@ class Player(pg.sprite.Sprite):
     def player_input(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_d] and self.rect.right <= 805:
-            self.rect.right += 3
+            self.rect.right += self.speed
             self.moveRight = True
         if keys[pg.K_q] or keys[pg.K_a] and self.rect.left >= 0:
-            self.rect.left -= 3
+            self.rect.left -= self.speed
             self.moveRight = False
         if keys[pg.K_SPACE] and self.rect.bottom >= 438:
             self.gravity = -10
@@ -77,6 +97,10 @@ class Player(pg.sprite.Sprite):
                 self.image = self.player_stand_right[int(self.player_standIndex)]
             else: self.image = self.player_stand_left[int(self.player_standIndex)]
 
+    
+    def is_attacking(self):
+        pass
+
 
 
     def collision_item(self):
@@ -99,12 +123,32 @@ class Player(pg.sprite.Sprite):
 
     def hasArmorChestpiece(self, type):
         if type == "chestPiece":
-            if (self.chestPiece == False):
-                self.chestPiece = True
-                self.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha()
+            if (self.inventory["chestpiece"] == False):
+                self.inventory["chestpiece"] = True
+                self.sheet = pg.image.load("images/player/playerChestPieceP.png").convert_alpha() # here is the problem, it lies with
+                # with the fact that i dont actually have something to say the chestpiece is this object, i am just drawing different sprites
                 return True
             return False
 
+    # def updateInventory(self):
+
+    def display_stats(self):
+        self.game.draw_text(f"AD: {self.attackDamage}", 'white', self.game.screen, 600, 35, True)
+        self.game.draw_text(f"ARMOR: {self.resistances}", 'white', self.game.screen, 600, 50, True)
+        self.game.draw_text(f"HP: {self.hp}", 'white', self.game.screen, 390, 65, True)
+
+    def update_stats(self):
+        self.attackDamage = self.baseAD
+        self.resistances = self.baseRes
+        self.speed = self.baseSpeed
+
+        if self.inventory["chestpiece"]: self.resistances += 10
+        if self.inventory["helmet"]: self.resistances += 5
+        if self.inventory["leggings"]: self.resistances += 8
+        if self.inventory["boots"]: 
+            self.resistances += 2 
+            self.speed += 1
+        if self.inventory["attackweapon"]: self.attackDamage += 20
 
 
 
@@ -114,6 +158,6 @@ class Player(pg.sprite.Sprite):
         self.animation_state_right()
         self.update_animate()
         self.armor_detection()
- 
-
+        self.update_stats()
+        self.display_stats()
 

@@ -16,4 +16,8 @@ class ChestPiece(Items):
         self.rect = self.image.get_rect(midbottom = (posX, posY+48))
         self.type = "chestPiece"
 
-
+class Sword(Items):
+    def __init__(self, namegroup, gameself):
+        super().__init__(namegroup)
+        self.game = gameself
+        
