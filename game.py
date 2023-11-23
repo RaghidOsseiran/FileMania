@@ -81,7 +81,7 @@ class Game:
                 else:
                     print(f"timer between: {current_time - self.player.damage_cooldown}")
                     if current_time - self.player.damage_cooldown > self.player.damage_cooldown_period:
-                        self.player.hp -= 5
+                        self.player.hp -= 10
                         self.player.damage_cooldown = current_time
 
 
@@ -135,6 +135,8 @@ class Game:
             self.items_group.draw(self.screen)
             self.items_group.update()
 
+            if (self.player.hp == 0):
+                pg.quit()
 
             pg.display.update()
             self.clock.tick(60)
